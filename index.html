@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Test H.O.G. Napoli Chapter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--card:#fff;--tx:#1c2126;--mu:#5d6770;--ac:#0e86bd;--acx:#fff;--ln:#cfd6dc;--ok:#1b7f3b;--ko:#b3392b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171a;--card:#1f2428;--tx:#eef1f4;--mu:#9aa5ae;--ac:#3fb4e8;--acx:#08222f;--ln:#394148;--ok:#4cc27a;--ko:#ff8a78}}
+:root[data-theme="dark"]{--bg:#14171a;--card:#1f2428;--tx:#eef1f4;--mu:#9aa5ae;--ac:#3fb4e8;--acx:#08222f;--ln:#394148;--ok:#4cc27a;--ko:#ff8a78}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:560px;margin:0 auto;padding:18px 16px 40px}
+h1,h2,.big{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;font-weight:700;line-height:1.1;margin:0}
+h1{font-size:38px}h2{font-size:27px;margin:18px 0 8px}
+.mu{color:var(--mu);font-size:15px}
+.bar{height:6px;background:var(--ln);border-radius:3px;margin:8px 0}.bar i{display:block;height:100%;background:var(--ac);border-radius:3px;transition:width .25s}
+.opt{display:block;width:100%;text-align:left;padding:14px;margin:9px 0;border:2px solid var(--ln);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
+.opt.on{border-color:var(--ac);box-shadow:inset 0 0 0 1px var(--ac)}
+input.t{width:100%;padding:14px;border:2px solid var(--ln);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;font-size:17px}
+.btn{display:block;text-align:center;text-decoration:none;padding:14px 18px;border:0;border-radius:10px;font:inherit;font-weight:600;background:var(--ac);color:var(--acx);cursor:pointer;margin:9px 0;width:100%}
+.btn.g{background:transparent;color:var(--tx);border:2px solid var(--ln)}
+.btn:disabled{opacity:.4;cursor:default}
+.nav{display:flex;gap:10px;margin-top:14px}.nav .btn{margin:0}
+.big{font-size:84px;color:var(--ac)}
+.box{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:14px;margin:12px 0}
+.qt{font-weight:600;margin-bottom:4px}.ko{color:var(--ko);font-weight:600}.ok{color:var(--ok);font-weight:600}
+</style></head><body><div class="w" id="app"></div>
+<script>
+const E=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const S=["Dati del pilota","Conoscenza del Group Riding","Comportamento in gruppo","Sicurezza personale e della moto","Ruoli e disciplina del gruppo","Valutazione e miglioramento"];
+const F4=[1,.67,.33,0],L5=[0,.25,.5,.75,1],lk=(a,b)=>["1 – "+a,"2","3","4","5 – "+b];
+const Q=[
+{s:0,k:"text",t:"Cognome e nome"},
+{s:0,t:"Anni di iscrizione al Chapter",o:["Meno di 1 anno","1–3 anni","3–5 anni","Più di 5 anni"],m:"Anni nel Chapter"},
+{s:0,t:"Tipo di moto",o:["Sportster","Softail","Touring","CVO","Pan America","Altro"],m:"Moto"},
+{s:0,t:"Chilometri percorsi mediamente ogni anno",o:["Meno di 3.000 km","3.000–8.000 km","8.000–15.000 km","Oltre 15.000 km"],m:"Km all'anno"},
+{s:1,t:"Conosci il H.O.G. Group Riding Manual?",o:["Sì","No","Solo in parte"],f:[1,0,.5]},
+{s:1,t:"Nella formazione a scacchiera (staggered formation), come si dispongono le moto?",o:["Tutte sulla stessa traiettoria","Alternativamente a destra e a sinistra della corsia","Due moto affiancate nella stessa posizione","Non è previsto dal manuale"],c:1},
+{s:1,t:"Nella formazione a scacchiera, quale distanza temporale deve mantenere il motociclista rispetto alla moto direttamente davanti a sé?",o:["1 secondo","2 secondi","3 secondi","4 secondi"],c:0,n:"1 secondo rispetto alla moto che precede nella metà opposta della corsia."},
+{s:1,t:"Quando il gruppo procede in fila singola (single file), quale distanza deve essere mantenuta dalla moto direttamente davanti?",o:["1 secondo","2 secondi","3 secondi","Non è indicata alcuna distanza"],c:1},
+{s:1,t:"Durante un sorpasso di un veicolo più lento su una strada a due corsie, come deve comportarsi il gruppo?",o:["Tutto il gruppo sorpassa contemporaneamente","Il Road Captain autorizza personalmente ogni singolo sorpasso","Ogni motociclista effettua il sorpasso individualmente quando è sicuro farlo","Il sorpasso è sempre vietato durante un run"],c:2},
+{s:1,t:"Quanto ti senti preparato sulla conoscenza dei segnali manuali utilizzati nella guida in gruppo?",o:lk("Per nulla","Molto preparato"),f:L5},
+{s:2,t:"Durante la marcia mantieni la tua posizione nella formazione a scacchiera evitando di affiancarti alla moto che precede?",o:["Sempre","Quasi sempre","Raramente","Mai"],f:F4},
+{s:2,t:"Quando le condizioni della strada lo richiedono, sei in grado di passare dalla formazione a scacchiera alla fila singola?",o:["Sempre","A volte","Raramente","Mai"],f:F4},
+{s:2,t:"Come ti comporti quando devi effettuare un sorpasso durante un run?",o:["Sorpasso quando ne ho la possibilità, anche senza considerare il gruppo","Seguo la procedura del gruppo ed effettuo il sorpasso solo quando è sicuro","Non sorpasso mai in nessuna circostanza"]},
+{s:2,t:"Se il gruppo si allunga e aumenta la distanza tra te e i motociclisti davanti, cosa fai?",o:["Accelero per recuperare rapidamente la distanza","Mantengo una velocità sicura e segnalo la situazione al gruppo","Sorpasso i motociclisti davanti per ricompattare il gruppo","Aumento la velocità anche se questo comporta una guida non sicura"],c:1},
+{s:2,t:"Durante la marcia utilizzi i segnali manuali e li ripeti per i motociclisti che seguono?",o:["Sempre","Quasi sempre","Solo quando me ne ricordo","Mai"],f:F4},
+{s:2,t:"Se hai necessità di fermarti improvvisamente, come ti comporti?",o:["Freno bruscamente senza segnalare","Mi fermo al centro della strada","Segnalo la necessità di fermarmi e mi arresto in sicurezza, evitando di creare un pericolo per il gruppo","Esco dalla formazione senza segnalare"],c:2},
+{s:3,t:"Prima di partecipare a un run effettui il controllo T-CLOCK previsto dal manuale H.O.G.?",o:["Sempre","A volte","Mai","Non so cosa sia il T-CLOCK"],f:[1,.5,0,0]},
+{s:3,k:"multi",t:"Quali elementi sono raccomandati dal manuale per l'abbigliamento? Seleziona tutte le risposte corrette.",o:["Casco omologato","Sandali o scarpe aperte","Protezione degli occhi","Guanti a dita complete","Auricolari con musica","Calzature che coprano la caviglia","Abbigliamento resistente all'abrasione"],c:[0,2,3,5,6]},
+{s:3,t:"Prima o durante un run, il motociclista può trovarsi sotto l'effetto di alcool, droghe o farmaci che compromettono la capacità di guida?",o:["Sì","No","Solo se si tratta di quantità limitate"],c:1},
+{s:3,t:"Come valuti il tuo livello di lucidità, concentrazione e preparazione prima di partecipare a un run?",o:lk("Molto basso","Ottimo"),f:L5},
+{s:4,t:"Durante un run conosci e rispetti i ruoli e le indicazioni del Ride Leader e degli altri responsabili del gruppo?",o:["Sempre","Quasi sempre","A volte","Mai"],f:F4},
+{s:4,t:"Se il Ride Leader indica una sosta o una variazione della marcia, come ti comporti?",o:["Seguo le indicazioni del Ride Leader mantenendo la sicurezza e la formazione","Proseguo secondo la mia decisione","Mi fermo indipendentemente dal resto del gruppo"],c:0},
+{s:4,t:"Secondo il manuale, quando viene effettuato il briefing prima della partenza?",o:["Almeno 60 minuti prima","Circa 15 minuti prima della partenza","Solo dopo la partenza","Il manuale non prevede alcun briefing"],c:1},
+{s:4,t:"Hai mai partecipato a un Safety Briefing o briefing pre-run organizzato dal Napoli Chapter?",o:["Sì","No"],m:"Briefing pre-run"},
+{s:5,t:"Quanto ti senti sicuro quando partecipi a una guida in gruppo del Napoli Chapter?",o:lk("Per nulla sicuro","Molto sicuro"),f:L5},
+{s:5,t:"Quanto ritieni chiara la comunicazione durante i run?",o:lk("Per nulla chiara","Molto chiara"),f:L5},
+{s:5,t:"Quanto ritieni disciplinato il gruppo durante i run?",o:lk("Per nulla disciplinato","Molto disciplinato"),f:L5},
+{s:5,t:"Vorresti partecipare a un corso di guida sicura avanzato organizzato dal Chapter?",o:["Sì","No","Forse"],m:"Corso avanzato"},
+{s:5,t:"Accetti che i dati raccolti siano utilizzati in forma anonima per elaborare statistiche sulla sicurezza del Chapter?",o:["Sì","No"],m:"Consenso statistiche"}
+];
+const EMAIL="tarkuslowriders@gmail.com";
+let i=0,A=[],app=document.getElementById("app");
+const secs=S.map((_,k)=>Q.map((q,n)=>n).filter(n=>Q[n].s===k));
+function intro(){app.innerHTML=`<h1>Test H.O.G. Napoli Chapter</h1><p class="mu">Conoscenza e comportamento nella guida in gruppo</p><div class="box">Il test ha ${Q.length} domande in ${S.length} sezioni, circa 5 minuti. Alla fine vedi la tua percentuale di conoscenza del manuale e le risposte da rivedere. Rispondi con sincerità: serve a migliorare insieme la sicurezza del gruppo.</div><button class="btn" id="go">Inizia il test</button>`;document.getElementById("go").onclick=()=>{i=0;A=[];render();scrollTo(0,0)}}
+const okq=n=>{const q=Q[n],a=A[n];return q.k==="text"?(a||"").trim().length>1:q.k==="multi"?(a||[]).length>0:a!==undefined};
+const valid=()=>secs[i].every(okq);
+function render(){let h=`<div class="mu">Sezione ${i+1} di ${S.length}</div><div class="bar"><i style="width:${i/S.length*100}%"></i></div><h2>${S[i]}</h2>`;
+secs[i].forEach((n,k)=>{const q=Q[n],a=A[n];h+=`<div class="box"><div class="qt">${k+1}. ${E(q.t)}</div>`;
+if(q.k==="text")h+=`<input class="t" data-n="${n}" autocomplete="name" placeholder="Es. Mario Rossi" value="${E(a||"")}">`;
+else h+=q.o.map((o,j)=>{const on=q.k==="multi"?(a||[]).includes(j):a===j;return `<button class="opt${on?" on":""}" data-n="${n}" data-j="${j}">${E(o)}</button>`}).join("");
+h+=`</div>`});
+h+=`<div class="nav">${i?'<button class="btn g" id="bk">Indietro</button>':""}<button class="btn" id="nx" ${valid()?"":"disabled"}>${i===S.length-1?"Concludi":"Avanti"}</button></div>`;
+app.innerHTML=h;
+app.querySelectorAll("input.t").forEach(el=>el.oninput=()=>{A[+el.dataset.n]=el.value;document.getElementById("nx").disabled=!valid()});
+app.querySelectorAll(".opt").forEach(el=>el.onclick=()=>{const n=+el.dataset.n,j=+el.dataset.j,q=Q[n];if(q.k==="multi"){const t=new Set(A[n]||[]);t.has(j)?t.delete(j):t.add(j);A[n]=[...t].sort()}else A[n]=j;const y=scrollY;render();scrollTo(0,y)});
+const bk=document.getElementById("bk");if(bk)bk.onclick=()=>{i--;render();scrollTo(0,0)};
+document.getElementById("nx").onclick=()=>{if(!valid())return;if(i<S.length-1){i++;render();scrollTo(0,0)}else finish()}}
+const ans=(q,a)=>q.k==="multi"?a.map(j=>q.o[j]).join("; "):q.o[a];
+function finish(){let ok=0,tot=0,sf=0,sn=0,bad=[];
+Q.forEach((q,n)=>{const a=A[n];if(q.c!==undefined){tot++;const g=q.k==="multi"?(a.length===q.c.length&&q.c.every(x=>a.includes(x))):a===q.c;g?ok++:bad.push([q,a])}if(q.f){sn++;sf+=q.f[a]}});
+const kp=Math.round(ok/tot*100),sp=Math.round(sf/sn*100),name=A[0].trim();
+const lv=kp>=90?"Ottimo: conosci bene il manuale.":kp>=70?"Buono: qualche punto da ripassare.":kp>=50?"Da rafforzare: rileggi le parti sbagliate.":"Da rivedere: ti consigliamo di rileggere il Group Riding Manual.";
+let msg=`TEST H.O.G. NAPOLI CHAPTER\nSocio: ${name}\nConoscenza del manuale: ${kp}% (${ok}/${tot})\nAutovalutazione: ${sp}%\n`;
+Q.forEach((q,n)=>{if(q.m)msg+=`${q.m}: ${q.o[A[n]]}\n`});
+const enc=encodeURIComponent;
+app.innerHTML=`<h1>Risultato di ${E(name)}</h1><div class="box"><div class="mu">Conoscenza del manuale</div><div class="big">${kp}%</div><div>${ok} risposte corrette su ${tot}. ${lv}</div></div>
+<div class="box"><div class="mu">Autovalutazione e percezione</div><div class="big" style="font-size:52px">${sp}%</div><div class="mu">Calcolata dalle tue risposte sul comportamento, a parte dal punteggio di conoscenza.</div></div>
+${bad.length?`<h2>Da rivedere</h2>`+bad.map(([q,a])=>`<div class="box"><div>${E(q.t)}</div><div class="ko">La tua risposta: ${E(ans(q,a))}</div><div class="ok">Risposta corretta: ${E(ans(q,q.k==="multi"?q.c:q.c))}</div>${q.n?`<div class="mu">${E(q.n)}</div>`:""}</div>`).join(""):`<div class="box ok">Nessuna risposta sbagliata. Bravo!</div>`}
+<h2>Invia il risultato al Chapter</h2><p class="mu">Si apre la tua app di posta con il messaggio già scritto: premi Invia.</p>
+<a class="btn" href="mailto:${EMAIL}?subject=${enc("Test H.O.G. Napoli Chapter - "+name)}&body=${enc(msg)}">Invia per email</a>
+<button class="btn g" id="rs">Rifai il test</button>`;
+document.getElementById("rs").onclick=intro;scrollTo(0,0)}
+intro();
+</script></body></html>
